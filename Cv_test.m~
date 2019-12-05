@@ -1,31 +1,41 @@
 clc
 clear all
 
-%RGB (236,0,51)
+RGB = [236,0,51];
 
 japan = imread('japan.jpg');
+size(japan)
+figure(1)
 imshow(japan)
-
-japan = reshape(japan,)
-
 H = size(japan,1);
 W = size(japan,2);
 
-mask = zeros(W,H);
-tol = 1; 
+japan = reshape(japan,H*W,3);
+
+mask = zeros(W*H,1);
+tol = 00; 
+
+dist = pdist2(japan,RGB);
+
+mask(dist<tol) = 0.5;
+
+mask = reshape(mask,H,W,1);
 
 
+[I, J] = find(mask == 0.5);
 
-for i = 1:H*W
-    dist = pdist2(japan(i))
-    
-    
-    
-end
+I_mean = round(mean(I));
+J_mean = round(mean(J));
 
+pos = [I_mean,J_mean];
 
+mask(I_mean,J_mean) = 10;
+%mask(pos)
 
-
+figure(2)
+imshow(mask)
+%hold on 
+%imshow(pos)
 
 
 
