@@ -1,6 +1,7 @@
 clc
 clear all
 
+%% Test Japan 
 RGB = [236,0,51];
 
 japan = imread('japan.jpg');
@@ -36,6 +37,11 @@ figure(2)
 imshow(mask)
 %hold on 
 %imshow(pos)
+
+%% Level 1
+
+
+v = VideoReader('Firstlevel.mp4');
 
 
 
