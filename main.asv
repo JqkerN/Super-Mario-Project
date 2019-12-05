@@ -1,6 +1,6 @@
 %% Applied Estimation Main:
 % ARTHURS: Ilian Corneliussen, Andrej Wilczek & Daniel Hirsch.
-clear all; clf; clc;
+clear 
 
 warning('off', 'Images:initSize:adjustingMag');
 vidObject = VideoReader('Firstlevel.mp4');

@@ -39,9 +39,9 @@ imshow(mask)
 %imshow(pos)
 
 %% Level 1
-
-
-v = VideoReader('Firstlevel.mp4');
+% 
+% 
+% v = VideoReader('Firstlevel.mp4');
 
 
 
