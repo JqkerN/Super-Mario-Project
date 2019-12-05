@@ -10,15 +10,15 @@ pants_RGB = [180,50,40];
 skin_RGB = [220,110,50];
 shirt_RGB = [100,100,0];
 se = strel('square',10);
-sigma = 1.2;
+sigma = 2;
 
 while hasFrame(vidObject)
     vidFrame = readFrame(vidObject);
-    vidFrame_pants = detect(vidFrame, pants_RGB,15);
-    vidFrame_skin = detect(vidFrame, skin_RGB,15);
-    vidFrame_shirt = detect(vidFrame, shirt_RGB,10);
-    vidFrame_masked = vidFrame_pants + vidFrame_skin + vidFrame_shirt;% vidFrame_skin +
-%     vidFrame_masked = blurr(vidFrame_masked,sigma);
+    vidFrame_pants = detect(vidFrame, pants_RGB,20);
+    vidFrame_skin = detect(vidFrame, skin_RGB,20);
+    vidFrame_shirt = detect(vidFrame, shirt_RGB,20);
+    vidFrame_masked = vidFrame_pants + vidFrame_skin + vidFrame_shirt;
+    vidFrame_masked = blurr(vidFrame_masked,sigma);
     vidFrame_masked = imdilate(vidFrame_masked,se);
     
     subplot(2,1,1)
