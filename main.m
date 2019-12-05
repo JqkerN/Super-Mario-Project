@@ -9,9 +9,7 @@ vidObject.CurrentTime = 10;
 pants_RGB = [180,50,40];
 skin_RGB = [220,110,50];
 shirt_RGB = [100,100,0];
-se = strel('square',10);
-sigma = 3;
-tol = 0.001;
+
 
 while hasFrame(vidObject)
     vidFrame = readFrame(vidObject);
@@ -20,6 +18,7 @@ while hasFrame(vidObject)
     vidFrame_shirt = detect(vidFrame, shirt_RGB,10);
     vidFrame_masked = vidFrame_pants + vidFrame_skin + vidFrame_shirt;% vidFrame_skin +
     [CP, vidFrame_masked] = centerPoint(vidFrame_masked);
+
     
     subplot(2,1,1)
     imshow(vidFrame); 
