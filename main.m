@@ -29,7 +29,7 @@ while hasFrame(vidObject)
     subplot(2,1,1)
     imshow(vidFrame); 
     hold on;
-    plot(CP(2),CP(1), 'r+', 'MarkerSize', 10, 'LineWidth', 1);
+    plot(CP(1), CP(2), 'r+', 'MarkerSize', 10, 'LineWidth', 1);
     
     subplot(2,1,2)
     imshow(vidFrame_masked)

@@ -10,8 +10,8 @@ Frame = imdilate(Frame,se);
 [I, J] = find(Frame == 1);
 I_mean = round(mean(I));
 J_mean = round(mean(J));
-CP = [I_mean,J_mean];
-% Frame(I_mean,J_mean) = 1;
+CP = [J_mean, I_mean];
+
 
 outFrame = Frame;
 end
