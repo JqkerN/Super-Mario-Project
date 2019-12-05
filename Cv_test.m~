@@ -1,0 +1,35 @@
+clc
+clear all
+
+%RGB (236,0,51)
+
+japan = imread('japan.jpg');
+imshow(japan)
+
+japan = reshape(japan,)
+
+H = size(japan,1);
+W = size(japan,2);
+
+mask = zeros(W,H);
+tol = 1; 
+
+
+
+for i = 1:H*W
+    dist = pdist2(japan(i))
+    
+    
+    
+end
+
+
+
+
+
+
+
+
+
+
+
