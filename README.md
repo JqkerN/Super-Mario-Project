@@ -1,6 +1,8 @@
 # Applied-Estimation
-ARTHURS: Ilian Corneliussen, Andrej Wilczek & Daniel Hirsch.
-PROBLEM DESCRIPTION: We will preform visual tracking of Mario in 
+### ARTHURS:
+Ilian Corneliussen, Andrej Wilczek & Daniel Hirsch.
+### PROBLEM DESCRIPTION:
+We will preform visual tracking of Mario in 
 Super Mario games. We will attempt an implementation of both a
 particle filter and Kalman filter. After implementation a comparative 
 analysis of the two filters performance in terms of relevant criteria 
