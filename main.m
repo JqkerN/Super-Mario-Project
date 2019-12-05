@@ -10,7 +10,8 @@ pants_RGB = [180,50,40];
 skin_RGB = [220,110,50];
 shirt_RGB = [100,100,0];
 se = strel('square',10);
-sigma = 1.2;
+sigma = 3;
+tol = 0.001;
 
 while hasFrame(vidObject)
     vidFrame = readFrame(vidObject);
@@ -18,13 +19,14 @@ while hasFrame(vidObject)
     vidFrame_skin = detect(vidFrame, skin_RGB,15);
     vidFrame_shirt = detect(vidFrame, shirt_RGB,10);
     vidFrame_masked = vidFrame_pants + vidFrame_skin + vidFrame_shirt;% vidFrame_skin +
-%     vidFrame_masked = blurr(vidFrame_masked,sigma);
-    vidFrame_masked = imdilate(vidFrame_masked,se);
+    [CP, vidFrame_masked] = centerPoint(vidFrame_masked);
     
     subplot(2,1,1)
-    imshow(vidFrame)
+    imshow(vidFrame); 
+    hold on;
+    plot(CP(2),CP(1), 'r+', 'MarkerSize', 10, 'LineWidth', 1);
     
     subplot(2,1,2)
     imshow(vidFrame_masked)
-    pause(0.00000000001)
+    pause(0.001)
 end

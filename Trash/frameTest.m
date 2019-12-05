@@ -14,6 +14,7 @@ shirt_RGB = [100,100,0];
 vidObject.CurrentTime = 10; % {50: BIG Mario} {12: small Mario}
 
 oneFrame = readFrame(vidObject);
+
 % oneFrame = blurr(oneFrame, 0.1);
 
 oneFrame_pants = detect(oneFrame, pants_RGB,20);

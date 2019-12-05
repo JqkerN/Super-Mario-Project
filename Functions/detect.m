@@ -15,5 +15,6 @@ dist = pdist2(Frame,RGB);
 mask(dist<tol) = 1;
 
 outFrame = reshape(mask,H,W,1);
+
 end
 
