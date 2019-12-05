@@ -20,5 +20,5 @@ while hasFrame(vidObject)
     
     subplot(2,1,2)
     imshow(vidFrame_masked)
-    pause(1/vidObject.FrameRate)
+    pause(0.00000000001)
 end
