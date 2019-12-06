@@ -1,11 +1,11 @@
 %% Applied Estimation Main:
 % ARTHURS: Ilian Corneliussen, Andrej Wilczek & Daniel Hirsch.
+clear all; clf; close all; clc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SCRIPT PARAMETERS
 VERSION = 2; % 1 or 2. 
-NewRGB = 0; % 0 or 1.
+newRGB = 0; % 0 or 1.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-clear all; clf; close all; clc;
 
 warning('off', 'Images:initSize:adjustingMag'); % Turning of warnings. 
 vidObject = VideoReader('Firstlevel.mp4');      % Loading video file.
@@ -18,7 +18,7 @@ if newRGB == 0
     shirt_RGB = [100,100,0];
 end
 
-if NewRGB == 1
+if newRGB == 1
     load(sprintf('%s\\%s\\pants_RGB',pwd,'Data'),'pants_RGB');
     load(sprintf('%s\\%s\\skin_RGB',pwd,'Data'),'skin_RGB');
     load(sprintf('%s\\%s\\shirt_RGB',pwd,'Data'),'shirt_RGB');
