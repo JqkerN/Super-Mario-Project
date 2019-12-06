@@ -9,7 +9,7 @@ vidObject.CurrentTime = 10;
 vidFrame = readFrame(vidObject);
 
 figure(1)
-vidFrame = vidFrame(end-60:end,1:180,:);
+vidFrame = vidFrame(end-61:end-39,79:101,:);
 imshow(vidFrame)
 
 
