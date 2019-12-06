@@ -72,7 +72,9 @@ if VERSION == 2
     [~, vidFrame] = centerPoint(vidFrame);
     Template = vidFrame(end-61:end-39,84:97,:); 
     
+    count = 0; % Frame count.
     while hasFrame(vidObject)
+        count = count + 1; 
         %Same as for Ver.1. 
         vidFrame = readFrame(vidObject);
         vidFrame_pants = detect(vidFrame, pants_RGB,15);
@@ -90,7 +92,7 @@ if VERSION == 2
         % Ploting stuff. 
         subplot(2,2,1)
         imshow(vidFrame); hold on;
-        title('Original - Tracking')
+        title(['Original - Tracking - Frame = ', num2str(count)])
         rectangle('position',[resize(1) resize(2) 30 30],...
                   'edgecolor','g','linewidth',2); hold off;
 
