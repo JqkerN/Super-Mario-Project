@@ -1,7 +1,7 @@
 function [CP, outFrame] = centerPoint(Frame)
 %BLURR Summary of this function goes here
 %   INPUT [H,W,1]
-se = strel('square',10);
+se = strel('square',5);
 tol = 0.001;
 Frame = medfilt(Frame,2,2);
 Frame(Frame > tol) = 1;

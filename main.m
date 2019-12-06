@@ -5,9 +5,13 @@ clear all; clf; close all; clc;
 % SCRIPT PARAMETERS
 VERSION = 2; % 1 or 2. 
 newRGB = 0; % 0 or 1.
+warning_mode = 'off'; % 'off' or 'on'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-warning('off', 'Images:initSize:adjustingMag'); % Turning of warnings. 
+disp(['Version: ',num2str(VERSION)])
+disp(['Color mode: ',num2str(newRGB)])
+disp(['Warning mode: ',warning_mode])
+warning(warning_mode,'all') % Turning of warnings. 
 vidObject = VideoReader('Firstlevel.mp4');      % Loading video file.
 vidObject.CurrentTime = 10;                     % Skipping menu intro.
 
@@ -71,7 +75,7 @@ if VERSION == 2
     vidFrame = vidFrame_pants + vidFrame_skin + vidFrame_shirt;
     [~, vidFrame] = centerPoint(vidFrame);
     Template = vidFrame(end-61:end-39,84:97,:); 
-    
+
     count = 0; % Frame count.
     while hasFrame(vidObject)
         count = count + 1; 
