@@ -3,10 +3,10 @@
 clear all; clf; close all; clc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SCRIPT PARAMETERS
-VERSION = 2; % 1, 2 or 3. 
+VERSION = 3; % 1, 2 or 3. 
 newRGB = 0; % 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
-mpFil = '2'; % '1' or '2'. The level number.
+mpFil = '1'; % '1' or '2'. The level number.
 getTemplate = false; % true or false. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -169,27 +169,29 @@ end
 % 5. Correlation with template. 
 
 if VERSION == 3
-    % Distance tolerance
-    distTol = 20;
-    firstEntry = true;
     
     %Taking out Template.
     vidFrame = readFrame(vidObject);
-    T = vidFrame(end-61:end-39,84:97,:); 
-    T = rgb2gray(T);
+    T = vidFrame(end-61:end-39,84:97,:);  
+%     T = rgb2gray(T);
     
     count = 0; % Frame count.
     while hasFrame(vidObject)
         count = count + 1; 
-        %Same as for Ver.1. 
+
         vidFrame = readFrame(vidObject);
-        vidFrame = rgb2gray(vidFrame);
+%         vidFrame = rgb2gray(vidFrame);
         
-        H = vision.TemplateMatcher;
-        H.SearchMethod = 'Three-step';
-        loc = step(H,vidFrame,T);
-        out = insertMarker(vidFrame,loc,'o','Size',10);
-        imshow(out)
+        [M, CV_estimate] = histogramComparison(vidFrame, T);
+        
+        subplot(1,2,1)
+        imshow(vidFrame); hold on;
+        title(['Original - Tracking - Frame = ', num2str(count)])
+        plot(CV_estimate(1),CV_estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
+%         rectangle('position',[estimate(1) estimate(2) 30 30],...
+%                   'edgecolor','g','linewidth',2); hold off;
+        subplot(1,2,2)
+        imshow(M);
         
         pause(0.00000001) % Needed for plot update. 
     end
