@@ -6,8 +6,8 @@ clear all; clf; close all; clc;
 VERSION = 2; % 1, 2 or 3. 
 newRGB = 0; % 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
-mpFil = '1'; % '1' or '2'. The level number.
-getTemplate = true; % true or false. 
+mpFil = '2'; % '1' or '2'. The level number.
+getTemplate = false; % true or false. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp(['Version: ',num2str(VERSION)])
