@@ -3,7 +3,7 @@
 clear all; clf; close all; clc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SCRIPT PARAMETERS
-VERSION = 2; % 1, 2 or 3. 
+VERSION = 4; % 1, 2, 3 or 4.        2:Particle 4:Kalman 
 newRGB = 0; % 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
 mpFil = '1'; % '1' or '2'. The level number.
@@ -66,7 +66,7 @@ if VERSION == 1
 end
 
 
-%% Verison 2.
+%% Verison 2. Particle Filter
 % 1. RGB color detection for R, G, B. 
 % 2. Median filtering.  (centerPoint.m)
 % 3. Thresholding. (centerPoint.m)
@@ -96,8 +96,8 @@ if VERSION == 2
     % Global variables
     global N S lim
     % Sample uniformly from the state space bounds
-    N = 1000;
-    lim = [360,480];  
+    N = 500;
+    lim = [480,360];  
     w = (1/N)*ones(1,N);
     S = [rand(1,N)*lim(1);rand(1,N)*lim(2);w];
 
@@ -129,27 +129,32 @@ if VERSION == 2
         end
         
         resize = [(xmax-size(T,2)) (ymax-size(T,1))];
-        [estimate] = Particle_filter(resize);
+        for i = 1:10
+            [estimate] = Particle_filter(resize);
+        end
         
         
         % Ploting stuff. 
         subplot(2,2,1)
         imshow(vidFrame); hold on;
         title(['Original - Tracking - Frame = ', num2str(count)])
-        rectangle('position',[resize(1) resize(2) 30 30],...
+%         plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
+        rectangle('position',[estimate(1) estimate(2) 30 30],...
                   'edgecolor','g','linewidth',2); hold off;
 
         subplot(2,2,2)
         imshow(correlation); hold on;
         title('Correlation - Tracking');
-        scatter(estimate(1,:),estimate(2,:),'r+', 'LineWidth', 1); hold off;
+        scatter(S(1,:),S(2,:),'r+', 'LineWidth', 1); hold off;
 
         subplot(2,2,3)
         imshow(Frame); hold on;
         title('Filterd - Tracking')
         rectangle('position',[resize(1) resize(2) 30 60],...
                   'curvature',[1,1],'edgecolor','g','linewidth',2);
-        scatter(estimate(1,:),estimate(2,:),'r+', 'LineWidth', 1); hold off;
+        scatter(S(1,:),S(2,:),'r+', 'LineWidth', 1); 
+        plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
+        
         yold = ymax;
         xold = xmax;
         pause(0.00000001) % Needed for plot update. 
@@ -189,6 +194,105 @@ if VERSION == 3
         pause(0.00000001) % Needed for plot update. 
     end
 end
+
+
+
+
+
+
+%% Verison 4. Kalman Filter
+% 1. RGB color detection for R, G, B. 
+% 2. Median filtering.  (centerPoint.m)
+% 3. Thresholding. (centerPoint.m)
+% 4. Dilate.  (centerPoint.m)
+% 5. Correlation with template. 
+
+if VERSION == 4
+    % Distance tolerance
+    distTol = 15;
+    firstEntry = true;
+    
+    if getTemplate == true
+        %Taking out Template.
+        vidFrame = readFrame(vidObject);
+        vidFrame_pants = detect(vidFrame, pants_RGB,15);
+        vidFrame_skin = detect(vidFrame, skin_RGB,15);
+        vidFrame_shirt = detect(vidFrame, shirt_RGB,10);
+        vidFrame = vidFrame_pants + vidFrame_skin + vidFrame_shirt;
+        [~, vidFrame] = centerPoint(vidFrame);
+        T = vidFrame(end-61:end-39,84:97,:); 
+        % save(sprintf('%s\\%s\\T',pwd,'Data'),'T');
+        % disp('Template saved.')
+    else 
+        load(sprintf('%s\\%s\\T',pwd,'Data'),'T');
+    end
+    
+    % Global variables
+    global mu Sigma 
+
+    count = 0; % Frame count.
+    while hasFrame(vidObject)
+        count = count + 1; 
+        %Same as for Ver.1. 
+        vidFrame = readFrame(vidObject);
+        vidFrame_pants = detect(vidFrame, pants_RGB,10);
+        vidFrame_skin = detect(vidFrame, skin_RGB,10);
+        vidFrame_shirt = detect(vidFrame, shirt_RGB,10);
+        vidFrame_masked = vidFrame_pants + vidFrame_skin + vidFrame_shirt;% 
+        [~, Frame] = centerPoint(vidFrame_masked);
+        
+        % Correlation 
+        correlation = normxcorr2(T(:,:,1),Frame(:,:,1));
+        [~, imax] = max(abs(correlation(:)));
+        [ymax, xmax] = ind2sub(size(correlation),imax(1));
+        
+        if firstEntry == true
+            xold = xmax;
+            yold = ymax;
+            % Initialize parametes
+            Sigma = eye(2);
+            mu = [(xmax-size(T,2)) (ymax-size(T,1))]';
+            firstEntry = false;
+        end
+        
+        if distTol < sqrt( abs(xmax-xold) + abs(ymax - yold) )
+            xmax = xold;
+            ymax = yold;
+        end
+        
+        z = [(xmax-size(T,2)) (ymax-size(T,1))]';
+        for i = 1:1
+            [estimate] = Kalmanfilter(z,mu,Sigma);
+        end
+        
+        
+        %Ploting stuff. 
+        subplot(2,2,1)
+        imshow(vidFrame); hold on;
+        title(['Original - Tracking - Frame = ', num2str(count)])
+%       plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
+        rectangle('position',[z(1) z(2) 30 30],...
+                  'edgecolor','g','linewidth',2); hold off;
+
+        subplot(2,2,2)
+        imshow(correlation); hold on;
+        title('Correlation - Tracking');
+        scatter(mu(1),mu(2),'r+', 'LineWidth', 1); hold off;
+
+        subplot(2,2,3)
+        imshow(Frame); hold on;
+        title('Filterd - Tracking')
+        rectangle('position',[z(1) z(2) 30 60],...
+                  'curvature',[1,1],'edgecolor','g','linewidth',2);
+        scatter(mu(1),mu(2),'r+', 'LineWidth', 1); 
+        plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
+        
+        yold = ymax;
+        xold = xmax;
+        pause(0.00000001) % Needed for plot update. 
+    end
+end
+
 
 
 disp('DONE.')
