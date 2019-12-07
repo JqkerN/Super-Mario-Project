@@ -6,8 +6,8 @@ clear all; clf; close all; clc;
 VERSION = 2; % 1, 2 or 3. 
 newRGB = 0; % 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
-mpFil = '2'; % '1' or '2'. The level number.
-getTemplate = false; % true or false. 
+mpFil = '1'; % '1' or '2'. The level number.
+getTemplate = true; % true or false. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp(['Version: ',num2str(VERSION)])
@@ -96,8 +96,8 @@ if VERSION == 2
     % Global variables
     global N S lim
     % Sample uniformly from the state space bounds
-    N = 500;
-    lim = [480,360];  
+    N = 1000;
+    lim = [360,480];  
     w = (1/N)*ones(1,N);
     S = [rand(1,N)*lim(1);rand(1,N)*lim(2);w];
 
@@ -129,32 +129,27 @@ if VERSION == 2
         end
         
         resize = [(xmax-size(T,2)) (ymax-size(T,1))];
-        for i = 1:10
-            [estimate] = Particle_filter(resize);
-        end
+        [estimate] = Particle_filter(resize);
         
         
         % Ploting stuff. 
         subplot(2,2,1)
         imshow(vidFrame); hold on;
         title(['Original - Tracking - Frame = ', num2str(count)])
-%         plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
-        rectangle('position',[estimate(1) estimate(2) 30 30],...
+        rectangle('position',[resize(1) resize(2) 30 30],...
                   'edgecolor','g','linewidth',2); hold off;
 
         subplot(2,2,2)
         imshow(correlation); hold on;
         title('Correlation - Tracking');
-        scatter(S(1,:),S(2,:),'r+', 'LineWidth', 1); hold off;
+        scatter(estimate(1,:),estimate(2,:),'r+', 'LineWidth', 1); hold off;
 
         subplot(2,2,3)
         imshow(Frame); hold on;
         title('Filterd - Tracking')
         rectangle('position',[resize(1) resize(2) 30 60],...
                   'curvature',[1,1],'edgecolor','g','linewidth',2);
-        scatter(S(1,:),S(2,:),'r+', 'LineWidth', 1); 
-        plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1); hold off;
-        
+        scatter(estimate(1,:),estimate(2,:),'r+', 'LineWidth', 1); hold off;
         yold = ymax;
         xold = xmax;
         pause(0.00000001) % Needed for plot update. 
