@@ -3,9 +3,9 @@ global S
 
 % initialize parameters %%%%%%%%%%%%%%%%%%%%%%%%
                                  
-Sigma_Q = diag([2000 2000]);                                % Measurement nosie covariance matrix
-Sigma_R = diag([3 3]);                                 % Process noise covariance matrix 
-lambda = 0.001;                                       % Outlier threshold
+Sigma_Q = diag([2000 2000]);          % Measurement nosie covariance matrix
+Sigma_R = diag([3 3]);                % Process noise covariance matrix 
+lambda = 0.001;                       % Outlier threshold
 
 
 % Particle filter %%%%%%%%%%%%%%%%%%%%%%%%%%%%
