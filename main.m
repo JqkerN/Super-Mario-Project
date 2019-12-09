@@ -3,8 +3,8 @@
 clear all; clf; close all; clc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SCRIPT PARAMETERS
-VERSION = 3; % 1, 2, or 3.        2:Particle   3:Kalman 
-newRGB = 0; % 0 or 1.
+VERSION = 1; % 1, 2, or 3.        2:Particle   3:Kalman 
+newRGB = 0;% 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
 mpFil = '1'; % '1' or '2'. The level number.
 getTemplate = true; % true or false. 
@@ -48,13 +48,13 @@ if VERSION == 1
     % Global variables
     global N S lim
     % Sample uniformly from the state space bounds
-    N = 500;
+    N = 1000;
     lim = [480,360];  
     w = (1/N)*ones(1,N);
     S = [rand(1,N)*lim(1);rand(1,N)*lim(2);w];
     
     distTol = 10;
-    firstEntry = true;
+
     
     count = 0;
     while hasFrame(vidObject)
@@ -66,24 +66,9 @@ if VERSION == 1
         vidFrame_masked = vidFrame_pants + vidFrame_skin + vidFrame_shirt;% 
         [CP, vidFrame_masked] = centerPoint(vidFrame_masked);
         
-        xmax = CP(1);
-        ymax = CP(2);
-        
-        if firstEntry == true
-            xold = xmax;
-            yold = ymax;
-            firstEntry = false;      
+        for i = 1:1
+            [estimate, pos_outlier] = Particle_filter(vidFrame_masked);
         end
-        
-        if distTol < sqrt( abs(xmax-xold) + abs(ymax - yold) )
-            xmax = xold;
-            ymax = yold;
-        end 
-        
-        for i = 1:5
-            estimate = Particle_filter(CP);
-        end
-        
         
         % Ploting stuff. 
         subplot(2,1,1)
@@ -95,18 +80,15 @@ if VERSION == 1
         plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1);   hold off;
 %         legend('CV estimate','Particles Center')
 
-
         subplot(2,1,2)
         imshow(vidFrame_masked); hold on;
         title(['Filtered - Tracking - Frame = ', num2str(count)])
         scatter(S(1,:),S(2,:),'b+', 'LineWidth', 1);
-        plot(CP(1),CP(2),'r+','MarkerSize',10, 'LineWidth', 1);  
+        plot(CP(1),CP(2),'r+','MarkerSize',10, 'LineWidth', 1);
         plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1);   hold off;
 %         legend('Particles','CV estimate','Particles Center')
         
 
-        yold = ymax;
-        xold = xmax;
         pause(0.00000001) % Needed for plot update. 
     end
 end
@@ -120,14 +102,7 @@ end
 % 5. Correlation with template. 
 
 if VERSION == 2
-    % Distance tolerance    % Global variables
-    global N S lim
-    % Sample uniformly from the state space bounds
-    N = 500;
-    lim = [480,360];  
-    w = (1/N)*ones(1,N);
-    S = [rand(1,N)*lim(1);rand(1,N)*lim(2);w];
-
+    % Distance tolerance    
     distTol = 10;
     firstEntry = true;
     
@@ -150,7 +125,7 @@ if VERSION == 2
     % Global variables
     global N S lim
     % Sample uniformly from the state space bounds
-    N = 500;
+    N = 50;
     lim = [480,360];  
     w = (1/N)*ones(1,N);
     S = [rand(1,N)*lim(1);rand(1,N)*lim(2);w];
@@ -183,7 +158,7 @@ if VERSION == 2
         end
         
         resize = [(xmax-size(T,2)) (ymax-size(T,1))];
-        for i = 1:5
+        for i = 1:10
             [estimate] = Particle_filter(resize);
         end
         
@@ -222,7 +197,7 @@ if VERSION == 2
 end
 
 
-%% Verison 4. Kalman Filter
+%% Verison 3. Kalman Filter
 % 1. RGB color detection for R, G, B. 
 % 2. Median filtering.  (centerPoint.m)
 % 3. Thresholding. (centerPoint.m)
@@ -287,7 +262,7 @@ if VERSION == 3
             [~] = Kalmanfilter(z,mu,Sigma);
         end
         
-        [X, Y] = ellipseDraw(mu,20*Sigma);
+        [X, Y] = ellipseDraw(mu,Sigma);
         
         
         %Ploting stuff. 

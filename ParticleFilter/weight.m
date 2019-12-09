@@ -1,13 +1,23 @@
-function w_bar = weight(S_bar,z,lambda,Sigma_Q)
+function [w_bar, pos_outlier] = weight(S_bar,z,lambda,Sigma_Q)
+
 
 % Calculates weights for all particles
-p = exp(-0.5 * ((z(1) - S_bar(1,:)).^2/Sigma_Q(1) + (z(2) - S_bar(2,:)).^2/Sigma_Q(4)));
-
-% detect outliers
-if mean(p) < lambda
-    disp('Outlier detected')
-     p(:) = 1;
+p = zeros(size(z,2), size(S_bar,2));
+pos_outlier = [0,0];
+for i = 1:size(z,2)
+    p(i,:) = exp(-0.5 * ((z(1,i) - S_bar(1,:)).^2/Sigma_Q(1) + (z(2,i) - S_bar(2,:)).^2/Sigma_Q(4)));
+   % detect outliers
+%    mean(p(i,:))
+    if mean(p(i,:)) < lambda
+        disp('Outlier detected')
+         p(i,:) = 1;
+    end   
+    % Normalize
+    %w_bar = p(i,:)/sum(p(i,:));
 end
-% Normalize
-w_bar = p/sum(p);
+
+p_prod = prod(p,1);
+
+w_bar = p_prod./sum(p_prod);
+
 end
