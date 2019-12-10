@@ -9,6 +9,8 @@ warning_mode = 'off'; % 'off' or 'on'
 mpFil = '1'; % '1' or '2'. The level number.
 getTemplate = true; % true or false. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(0,'defaulttextinterpreter','latex')
+
 
 disp(['Version: ',num2str(VERSION)])
 disp(['Color absmode: ',num2str(newRGB)])
@@ -21,6 +23,10 @@ disp('---------------------------------')
 warning(warning_mode,'all') % Turning of warnings. 
 vidObject = VideoReader([mpFil, 'level.mp4']);      % Loading video file.
 vidObject.CurrentTime = 10;                     % Skipping menu intro.
+
+
+load('Mario_pos.mat')
+
 
 % Make color decision, 0 or 1. 
 if newRGB == 0
@@ -88,6 +94,34 @@ if VERSION == 1
         plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1);   hold off;
 %         legend('Particles','CV estimate','Particles Center')
         
+%         if count < 278
+%             CV_error(count) = abs(mean(CP-possition(count,:)));
+%             PF_error(count) = abs(mean(estimate'-possition(count,:)));
+%             x_s(count) = max(S(1,:))-min(S(1,:));
+%             y_s(count) = max(S(2,:))-min(S(2,:));
+%             X = count;
+%         elseif count == 278
+%             figure(10)
+% 
+%             plot(1:X, CV_error,'r','linewidth',1.5), hold on;
+%             plot(1:X, PF_error,'k','linewidth',1.5), hold off;
+%             legend('CV','PF','FontSize', 10)
+%             title('Absolute Mean Error','FontSize', 18)
+%             xlabel('Frame','FontSize', 18)
+%             ylabel('$\varepsilon$','FontSize', 18)
+%             
+%             figure(20)
+%             
+%             plot(1:X, x_s,'k','linewidth',1.5), hold on;
+%             plot(1:X, y_s,'r','linewidth',1.5), hold off;
+%             legend('X direction','Y direction','FontSize', 10)
+%             title('Particle Filter Spread','FontSize', 18)
+%             xlabel('Frame','FontSize', 18)
+%             ylabel('Spread','FontSize', 18)
+%             pause(1000)
+%         end
+
+            
 
         pause(0.00000001) % Needed for plot update. 
     end
