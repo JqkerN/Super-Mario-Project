@@ -1,4 +1,4 @@
-# Applied-Estimation
+# Applied Estimation - Super Mario
 ### ARTHURS:
 Ilian Corneliussen, Andrej Wilczek & Daniel Hirsch.
 ### PROBLEM DESCRIPTION:
