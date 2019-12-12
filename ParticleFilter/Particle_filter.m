@@ -3,8 +3,8 @@ global S
 
 % initialize parameters %%%%%%%%%%%%%%%%%%%%%%%%
                                  
-Sigma_Q = diag([10000 20000])*1;          % Measurement nosie covariance matrix
-Sigma_R = diag([80 20])*2;              % Process noise covariance matrix 
+Sigma_Q = diag([9500 9500]);          % Measurement nosie covariance matrix
+Sigma_R = diag([250 250]);              % Process noise covariance matrix 
 lambda = 0.2;                       % Outlier threshold
 
 [r,c] = find(z == 1);
@@ -19,6 +19,12 @@ S_bar = systematic_resample(S_bar);
 %S_bar = multinomial_resample(S_bar);
 S = S_bar;
 estimate = mean(S_bar(1:2,:),2);
+
+x_s = max(S(1,:))-min(S(1,:));
+y_s = max(S(2,:))-min(S(2,:));
+
+
+
 
 end
 

@@ -1,5 +1,5 @@
 function [w_bar, pos_outlier] = weight(S_bar,z,lambda,Sigma_Q)
-
+global Outlier
 
 % Calculates weights for all particles
 p = zeros(size(z,2), size(S_bar,2));
@@ -9,7 +9,8 @@ for i = 1:size(z,2)
    % detect outliers
 %    mean(p(i,:))
     if mean(p(i,:)) < lambda
-        disp('Outlier detected')
+%         disp('Outlier detected')
+         Outlier = Outlier +1;
          p(i,:) = 1;
     end   
     % Normalize

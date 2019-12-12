@@ -8,7 +8,7 @@ newRGB = 0;% 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
 mpFil = '1'; % '1' or '2'. The level number.
 getTemplate = true; % true or false. 
-plt = 1; % false; % true or false
+plt = 0; % false; % true or false
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(0,'defaulttextinterpreter','latex')
 
@@ -26,7 +26,7 @@ set(0,'defaulttextinterpreter','latex')
 % KF: toterr = 8.6192
 % Q = 1
 % R = 1.5 
-% MM = 3 X
+% MM = 3
 % Error w/o motion = 8.2276
 % Error w motion = 8.1996
 
@@ -62,7 +62,6 @@ if newRGB == 1
     load(sprintf('%s\\%s\\shirt_RGB',pwd,'Data'),'shirt_RGB');
 end
 
- 
 
 
 %% Version 1. Version: 2
@@ -156,10 +155,6 @@ if VERSION == 1
             disp(['nmr of outliers = ', num2str(Outlier)])
             
             pause(1000)
-        end
-        
-        if count == 795
-            pause(1000000)
         end
         
         yold = CP(2);
