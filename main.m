@@ -3,12 +3,12 @@
 clear all; clf; close all; clc;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SCRIPT PARAMETERS
-VERSION = 1; % 1 or 2.        1:Particle   2:Kalman 
+VERSION = 2; % 1 or 2.        1:Particle   2:Kalman 
 newRGB = 0;% 0 or 1.
 warning_mode = 'off'; % 'off' or 'on'
 mpFil = '1'; % '1' or '2'. The level number.
 getTemplate = true; % true or false. 
-plt = 1; % false; % true or false
+plt = 0; % false; % true or false
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(0,'defaulttextinterpreter','latex')
 
@@ -20,15 +20,29 @@ set(0,'defaulttextinterpreter','latex')
 % R = 250
 % lambda = 0.2
 % MM = 1.5
-% Error w/o motion = 6.5216
-% Error w motion = 6.5309
+
+% Error w/o motion:
+%mean measurment error = 24.1679
+%mean PF error = 21.0163
+%nmr of outliers = 1704
+
+% Error w motion:
+%mean measurment error = 24.1679
+%mean PF error = 21.586
+%nmr of outliers = 1685
+
 
 % KF: toterr = 8.6192
 % Q = 1
 % R = 1.5 
-% MM = 3 X
-% Error w/o motion = 8.2276
-% Error w motion = 8.1996
+% MM = 1.5
+% Error w/o motion:
+%mean measurment error = 24.1679
+%mean KF error = 23.3552
+% Error w motion:
+%mean measurment error = 24.1679
+%mean KF error = 23.5131
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rng(10)
@@ -65,7 +79,7 @@ end
  
 
 
-%% Version 1. Version: 2
+%% Version 1. 
 % 1. RGB color detection for R, G, B. 
 % 2. Median filtering.  (centerPoint.m)
 % 3. Thresholding. (centerPoint.m)
@@ -126,8 +140,8 @@ if VERSION == 1
             plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1);   hold off;
         end
         if count < 1662%278
-            CV_error(count) = abs(mean(CP-possition(count,:)));
-            PF_error(count) = abs(mean(estimate'-possition(count,:)));
+            CV_error(count) = abs(sqrt(sum((CP-possition(count,:)).^2)));
+            PF_error(count) = abs(sqrt(sum((estimate'-possition(count,:)).^2)));
             x_s(count) = max(S(1,:))-min(S(1,:));
             y_s(count) = max(S(2,:))-min(S(2,:));
             X = count;
@@ -136,10 +150,10 @@ if VERSION == 1
             figure(10)
             plot(1:X, CV_error,'r','linewidth',1.5), hold on;
             plot(1:X, PF_error,'k','linewidth',1.5), hold off;
-            legend('Mean meas.','PF','FontSize', 10)
-            title('Absolute Mean Error','FontSize', 18)
+            legend('Measurement','PF','FontSize', 10)
+            title('Absolute Error','FontSize', 18)
             xlabel('Frame','FontSize', 18)
-            ylabel('$\varepsilon$','FontSize', 18)
+            ylabel('Error','FontSize', 18)
             grid on
             
             figure(20)
@@ -158,10 +172,10 @@ if VERSION == 1
             pause(1000)
         end
         
-        if count == 795
-            pause(1000000)
-        end
-        
+%         if count == 795
+%             pause(1000000)
+%         end
+%         
         yold = CP(2);
         xold = CP(1);
             
@@ -255,8 +269,8 @@ if VERSION == 2
         end
         
         if count < 1662%278
-            CV_error(count) = abs(mean(CP-possition(count,:)));
-            KF_error(count) = abs(mean(mu'-possition(count,:)));
+            CV_error(count) = abs(sqrt(sum((CP-possition(count,:)).^2)));
+            KF_error(count) = abs(sqrt(sum((mu'-possition(count,:)).^2)));
 %             x_s(count) = mmu = mu_bar  + K*(z-mu_bar);ax(S(1,:))-min(S(1,:));
 %             y_s(count) = max(S(2,:))-min(S(2,:));
             Xc = count;
@@ -265,10 +279,10 @@ if VERSION == 2
 
             plot(1:Xc, CV_error,'r','linewidth',1.5), hold on;
             plot(1:Xc, KF_error,'k','linewidth',1.5), hold off;
-            legend('Mean Meas.','KF','FontSize', 10)
-            title('Absolute Mean Error','FontSize', 18)
+            legend('Measurement','KF','FontSize', 10)
+            title('Absolute Error','FontSize', 18)
             xlabel('Frame','FontSize', 18)
-            ylabel('$\varepsilon$','FontSize', 18)
+            ylabel('Error','FontSize', 18)
             grid on
             
             disp(['mean measurment error = ', num2str(mean(CV_error))])
