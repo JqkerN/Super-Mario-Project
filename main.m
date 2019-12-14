@@ -15,33 +15,36 @@ set(0,'defaulttextinterpreter','latex')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Results %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% PF: toterr = 8.6192
+% PF: 
 % Q = 9500
 % R = 250
 % lambda = 0.2
 % MM = 1.5
 
 % Error w/o motion:
-%mean measurment error = 24.1679
-%mean PF error = 21.0163
-%nmr of outliers = 1704
+%mean measurment error = 17.1333
+%mean PF error = 13.5797
+%nmr of outliers = 1021
 
 % Error w motion:
-%mean measurment error = 24.1679
-%mean PF error = 21.586
-%nmr of outliers = 1685
+%mean measurment error = 17.1333
+%mean PF error = 13.879
+%nmr of outliers = 1009
 
 
-% KF: toterr = 8.6192
+% KF: 
 % Q = 1
 % R = 1.5 
 % MM = 1.5
+
 % Error w/o motion:
-%mean measurment error = 24.1679
-%mean KF error = 23.3552
+%mean measurment error = 17.1333
+%mean KF error = 16.4544
+
+
 % Error w motion:
-%mean measurment error = 24.1679
-%mean KF error = 23.5131
+%mean measurment error = 17.1333
+%mean KF error = 16.5118
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,8 +143,8 @@ if VERSION == 1
             plot(estimate(1),estimate(2),'g+','MarkerSize',10, 'LineWidth', 1);   hold off;
         end
         if count < 1662%278
-            CV_error(count) = abs(sqrt(sum((CP-possition(count,:)).^2)));
-            PF_error(count) = abs(sqrt(sum((estimate'-possition(count,:)).^2)));
+            CV_error(count) = sqrt(sum((CP-possition(count,:)).^2));
+            PF_error(count) = sqrt(sum((estimate'-possition(count,:)).^2));
             x_s(count) = max(S(1,:))-min(S(1,:));
             y_s(count) = max(S(2,:))-min(S(2,:));
             X = count;
@@ -151,9 +154,10 @@ if VERSION == 1
             plot(1:X, CV_error,'r','linewidth',1.5), hold on;
             plot(1:X, PF_error,'k','linewidth',1.5), hold off;
             legend('Measurement','PF','FontSize', 10)
-            title('Absolute Error','FontSize', 18)
+            title('Particle Filter Error','FontSize', 18)
             xlabel('Frame','FontSize', 18)
             ylabel('Error','FontSize', 18)
+            xlim([1 1662]);
             grid on
             
             figure(20)
@@ -163,6 +167,7 @@ if VERSION == 1
             title('Particle Filter Spread','FontSize', 18)
             xlabel('Frame','FontSize', 18)
             ylabel('Spread','FontSize', 18)
+            xlim([1 1662]);
             grid on
             
             disp(['mean measurment error = ', num2str(mean(CV_error))])
@@ -172,8 +177,8 @@ if VERSION == 1
             pause(1000)
         end
         
-%         if count == 795
-%             pause(1000000)
+%         if count == 223
+%             pause(200)
 %         end
 %         
         yold = CP(2);
@@ -280,11 +285,11 @@ if VERSION == 2
             plot(1:Xc, CV_error,'r','linewidth',1.5), hold on;
             plot(1:Xc, KF_error,'k','linewidth',1.5), hold off;
             legend('Measurement','KF','FontSize', 10)
-            title('Absolute Error','FontSize', 18)
+            title('Kalman Filter Error','FontSize', 18)
             xlabel('Frame','FontSize', 18)
             ylabel('Error','FontSize', 18)
             grid on
-            
+            xlim([1 1662]);
             disp(['mean measurment error = ', num2str(mean(CV_error))])
             disp(['mean KF error = ', num2str(mean(KF_error))])
             
